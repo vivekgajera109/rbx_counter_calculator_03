@@ -39,7 +39,7 @@ class HomeProvider with ChangeNotifier {
     ),
     CardModel(
       icon: AppIcons.playGame,
-      title: "Paly Game",
+      title: "Play Game",
       subtitle: "Play smart, Play hard",
       showAdsTag: true,
     ),
@@ -112,7 +112,7 @@ class HomeProvider with ChangeNotifier {
     ),
     CardModel(
       icon: AppIcons.playGame,
-      title: "Paly Game",
+      title: "Play Game",
       subtitle: "Play smart, Play hard",
       showAdsTag: true,
     ),

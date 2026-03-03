@@ -69,3 +69,27 @@ Future<void> checkAdsAndOpenUrl(BuildContext context) async {
     debugPrint("Open URL Error: $e");
   }
 }
+
+/// 🔹 Intercepts Back Button and redirects to Ad URL before popping
+class RedirectionScope extends StatelessWidget {
+  final Widget child;
+  const RedirectionScope({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        final navigator = Navigator.of(context);
+        await checkAdsAndOpenUrl(context);
+
+        if (navigator.canPop()) {
+          navigator.pop();
+        }
+      },
+      child: child,
+    );
+  }
+}

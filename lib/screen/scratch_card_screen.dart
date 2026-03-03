@@ -1,3 +1,4 @@
+import 'package:rbx_counter/helper/remote_config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rbx_counter/Provider/scratch_provider.dart';
@@ -74,152 +75,149 @@ class _ScratchCardScreenState extends State<ScratchCardScreen>
             ? "🎁 YOU WON +${provider.lastReward} RBX!"
             : "😢 NO LUCK THIS TIME. RETRY!";
 
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "SCRATCH THE AREA BELOW",
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2,
-                ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "SCRATCH THE AREA BELOW",
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 2,
               ),
-              const SizedBox(height: 30),
-              // Antigravity Container for Scratcher
-              AntigravityCard(
-                onTap: () {},
-                borderGradient: const [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0), // Gap for the glow
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Scratcher(
-                      brushSize: 50,
-                      threshold: 50,
-                      color: const Color(0xFF1A1A1A),
-                      image: Image.asset("assets/images/scratch_card_cover.png",
-                          fit: BoxFit.cover),
-                      onThreshold: () {
-                        if (!isScratched) {
-                          provider.onScratchCompleted();
-                          setState(() => isScratched = true);
-                          _showResultDialog(context);
-                        }
-                      },
-                      child: Container(
-                        height: 220,
-                        width: 320,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D0D0D),
-                          image: provider.lastSuccess
-                              ? const DecorationImage(
-                                  image: AssetImage(
-                                      "assets/images/onboarding1.png"), // Using a holographic asset as background
-                                  opacity: 0.1,
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
-                        ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Ambient Glow
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: RadialGradient(
-                                  colors: [
-                                    (provider.lastSuccess
-                                            ? const Color(0xFF48CAE4)
-                                            : Colors.redAccent)
-                                        .withOpacity(0.15),
-                                    Colors.transparent,
-                                  ],
-                                  radius: 0.8,
-                                ),
+            ),
+            const SizedBox(height: 30),
+            // Antigravity Container for Scratcher
+            AntigravityCard(
+              onTap: () {},
+              borderGradient: const [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
+              child: Padding(
+                padding: const EdgeInsets.all(4.0), // Gap for the glow
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Scratcher(
+                    brushSize: 50,
+                    threshold: 50,
+                    color: const Color(0xFF1A1A1A),
+                    image: Image.asset("assets/images/scratch_card_cover.png",
+                        fit: BoxFit.cover),
+                    onThreshold: () {
+                      if (!isScratched) {
+                        provider.onScratchCompleted();
+                        setState(() => isScratched = true);
+                        _showResultDialog(context);
+                      }
+                    },
+                    child: Container(
+                      height: 220,
+                      width: 320,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0D0D0D),
+                        image: provider.lastSuccess
+                            ? const DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/onboarding1.png"), // Using a holographic asset as background
+                                opacity: 0.1,
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Ambient Glow
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                colors: [
+                                  (provider.lastSuccess
+                                          ? const Color(0xFF48CAE4)
+                                          : Colors.redAccent)
+                                      .withOpacity(0.15),
+                                  Colors.transparent,
+                                ],
+                                radius: 0.8,
                               ),
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  provider.lastSuccess
-                                      ? Icons.auto_awesome_rounded
-                                      : Icons
-                                          .sentiment_very_dissatisfied_rounded,
-                                  color: provider.lastSuccess
-                                      ? const Color(0xFF48CAE4)
-                                      : Colors.white30,
-                                  size: 40,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                provider.lastSuccess
+                                    ? Icons.auto_awesome_rounded
+                                    : Icons.sentiment_very_dissatisfied_rounded,
+                                color: provider.lastSuccess
+                                    ? const Color(0xFF48CAE4)
+                                    : Colors.white30,
+                                size: 40,
+                              ),
+                              const SizedBox(height: 12),
+                              ShaderMask(
+                                shaderCallback: (bounds) => LinearGradient(
+                                  colors: provider.lastSuccess
+                                      ? [
+                                          const Color(0xFF48CAE4),
+                                          const Color(0xFF9D4EDD)
+                                        ]
+                                      : [Colors.white, Colors.white54],
+                                ).createShader(bounds),
+                                child: Text(
+                                  cardText.split('.').first.toUpperCase(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    letterSpacing: 1.5,
+                                  ),
                                 ),
-                                const SizedBox(height: 12),
-                                ShaderMask(
-                                  shaderCallback: (bounds) => LinearGradient(
-                                    colors: provider.lastSuccess
-                                        ? [
-                                            const Color(0xFF48CAE4),
-                                            const Color(0xFF9D4EDD)
-                                          ]
-                                        : [Colors.white, Colors.white54],
-                                  ).createShader(bounds),
-                                  child: Text(
-                                    cardText.split('.').first.toUpperCase(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
+                              ),
+                              if (provider.lastSuccess) ...[
+                                const SizedBox(height: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.1)),
+                                  ),
+                                  child: const Text(
+                                    "REWARD UNLOCKED",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                      letterSpacing: 1.5,
+                                      letterSpacing: 2,
                                     ),
                                   ),
                                 ),
-                                if (provider.lastSuccess) ...[
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: Colors.white.withOpacity(0.1)),
-                                    ),
-                                    child: const Text(
-                                      "REWARD UNLOCKED",
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ],
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
-              // Hint Icons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _hintIcon(Icons.auto_awesome_rounded),
-                  const SizedBox(width: 20),
-                  _hintIcon(Icons.touch_app_rounded),
-                  const SizedBox(width: 20),
-                  _hintIcon(Icons.currency_bitcoin_rounded),
-                ],
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 40),
+            // Hint Icons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _hintIcon(Icons.auto_awesome_rounded),
+                const SizedBox(width: 20),
+                _hintIcon(Icons.touch_app_rounded),
+                const SizedBox(width: 20),
+                _hintIcon(Icons.currency_bitcoin_rounded),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -275,7 +273,7 @@ class _ScratchCardScreenState extends State<ScratchCardScreen>
               return Consumer<ScratchProvider>(
                   builder: (context, provider, child) {
                 return SafeArea(
-                  child: Padding(
+                  child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
@@ -327,8 +325,9 @@ class _ScratchCardScreenState extends State<ScratchCardScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Expanded(child: _buildScratchCard(context)),
+                        const SizedBox(height: 30),
+                        _buildScratchCard(context),
+                        const SizedBox(height: 30),
                         const NativeAdsScreen(),
                         const SizedBox(height: 20),
                       ],

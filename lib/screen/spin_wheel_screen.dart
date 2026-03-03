@@ -99,7 +99,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
             child: FadeTransition(
               opacity: _fadeAnimation,
               child: SafeArea(
-                child: Padding(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
@@ -152,7 +152,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
                         ),
                       ),
 
-                      const Spacer(),
+                      const SizedBox(height: 40),
 
                       // Fortune Wheel Container
                       Container(
@@ -217,7 +217,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
                         ),
                       ),
 
-                      const Spacer(),
+                      const SizedBox(height: 40),
 
                       // Spin Button
                       Padding(

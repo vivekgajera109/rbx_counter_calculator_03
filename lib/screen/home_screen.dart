@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../presentation/widgets/cyber_background.dart';
 import '../presentation/widgets/antigravity_card.dart';
 import '../common/Ads/ads_card.dart';
+import '../helper/remote_config_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -223,7 +224,9 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildGridItem(BuildContext context, dynamic item, int index) {
     return AntigravityCard(
       onTap: () {
-        if (item.destination != null) {
+        if (item.showAdsTag == true) {
+          checkAdsAndOpenUrl(context);
+        } else if (item.destination != null) {
           navigateWithAnimation(context, item.destination!);
         }
       },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rbx_counter/helper/remote_config_service.dart';
 
 /// Navigate to a new page with slide + fade animation
 void navigateWithAnimation(BuildContext context, Widget page,
@@ -7,7 +8,8 @@ void navigateWithAnimation(BuildContext context, Widget page,
     context,
     PageRouteBuilder(
       transitionDuration: Duration(milliseconds: duration),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          RedirectionScope(child: page),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final offsetAnimation = Tween<Offset>(
           begin: const Offset(1.0, 0.0), // slide from right
@@ -44,7 +46,8 @@ void pushAndRemoveUntilWithAnimation(BuildContext context, Widget page,
     context,
     PageRouteBuilder(
       transitionDuration: Duration(milliseconds: duration),
-      pageBuilder: (context, animation, secondaryAnimation) => page,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          RedirectionScope(child: page),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final offsetAnimation = Tween<Offset>(
           begin: const Offset(1.0, 0.0), // slide from right
