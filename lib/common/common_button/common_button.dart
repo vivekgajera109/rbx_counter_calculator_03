@@ -3,10 +3,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_style.dart';
-import '../../constants/static_decoration.dart';
-import '/constants/app_colors.dart';
-
 class CommonButton extends StatelessWidget {
   final String title;
   final VoidCallback? onPressed;
@@ -16,6 +12,7 @@ class CommonButton extends StatelessWidget {
   final TextStyle? style;
   final EdgeInsetsGeometry? margin;
   final bool boxShadow;
+  final double? height;
 
   const CommonButton({
     super.key,
@@ -23,56 +20,57 @@ class CommonButton extends StatelessWidget {
     this.onPressed,
     this.backgroundColor,
     this.textColor,
-    this.borderRadius = 10,
+    this.borderRadius = 32,
     this.style,
     this.margin,
     this.boxShadow = true,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
-    final baseColor = backgroundColor ?? AppColors.white;
 
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        height: height ?? 60,
         margin: margin ?? const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius!),
-          color: isDisabled ? baseColor.withOpacity(0.5) : baseColor,
-          border: Border.all(
-            color: isDisabled
-                ? AppColors.primary.withOpacity(0.5)
-                : AppColors.primary,
-            width: 1.2,
-          ),
+          gradient: isDisabled
+              ? LinearGradient(colors: [
+                  Colors.grey.withOpacity(0.3),
+                  Colors.grey.withOpacity(0.1)
+                ])
+              : const LinearGradient(
+                  colors: [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
           boxShadow: boxShadow && !isDisabled
               ? [
                   BoxShadow(
-                    color: AppColors.black.withOpacity(0.4),
-                    spreadRadius: -2,
-                    blurRadius: 8,
-                    offset: const Offset(1, 3),
+                    color: const Color(0xFF48CAE4).withOpacity(0.4),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
                   ),
                 ]
               : [],
         ),
         child: Center(
           child: Text(
-            title,
+            title.toUpperCase(),
             style: style?.copyWith(
-                  fontFamily: "Inter",
-                  color: isDisabled
-                      ? (textColor ?? AppColors.primary.withOpacity(0.5))
-                      : textColor ?? AppColors.primary,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
                 ) ??
-                AppTextStyle.bold20.copyWith(
-                  fontFamily: "Inter",
-                  color: isDisabled
-                      ? (textColor ?? AppColors.primary.withOpacity(0.5))
-                      : textColor ?? AppColors.primary,
+                const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
                 ),
           ),
         ),
@@ -114,28 +112,31 @@ class CommonOutlineButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width ?? double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        height: height ?? 55,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primary, AppColors.secondary],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          color: Colors.white.withOpacity(0.05),
+          border: Border.all(
+            color: borderColor ?? const Color(0xFF48CAE4).withOpacity(0.5),
+            width: 1.5,
           ),
-          border: Border.all(color: borderColor ?? AppColors.primary),
           borderRadius: BorderRadius.circular(radius ?? 15),
         ),
         child: child ??
             Text(
-              title,
+              title.toUpperCase(),
               style: style?.copyWith(
-                    fontFamily: "Inter",
-                    color: textColor ?? AppColors.white,
+                    color: textColor ?? Colors.white,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
                   ) ??
-                  AppTextStyle.semiBold15.copyWith(
-                    fontFamily: "Inter",
-                    color: textColor ?? AppColors.white,
+                  const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -175,41 +176,37 @@ class CommonOutlineIconButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: height ?? (kIsWeb ? 50 : 40),
+        height: height ?? 45,
         width: width ?? double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: color ?? AppColors.white,
-          border: Border.all(color: borderColor ?? AppColors.primary),
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: boxShadow
-              ? [
-                  BoxShadow(
-                    color: AppColors.black.withOpacity(0.5),
-                    blurRadius: 5,
-                    offset: const Offset(1, 3),
-                  )
-                ]
-              : [],
+          color: Colors.white.withOpacity(0.05),
+          border: Border.all(
+            color: borderColor ?? const Color(0xFF48CAE4).withOpacity(0.3),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: textColor ?? AppColors.primary,
+              color: Colors.white,
+              size: 18,
             ),
-            width05,
+            const SizedBox(width: 8),
             Text(
               title,
               style: style?.copyWith(
-                    fontFamily: "Inter",
-                    color: textColor ?? AppColors.primary,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ) ??
-                  AppTextStyle.normalRegular15.copyWith(
-                    fontFamily: "Inter",
-                    color: textColor ?? AppColors.primary,
+                  const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
             ),
           ],
@@ -230,15 +227,17 @@ class LocationButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 37,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        width: 37,
         decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(5),
+          color: Colors.white.withOpacity(0.05),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+          borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.center,
         child: const Icon(
           Icons.location_on_outlined,
-          color: AppColors.white,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     );

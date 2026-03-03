@@ -1,15 +1,13 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rbx_counter/Provider/scratch_provider.dart';
+import 'package:rbx_counter/Provider/wallet_provider.dart';
 import 'package:rbx_counter/common/Ads/ads_card.dart';
-import 'package:rbx_counter/common/common_app_bar/common_app_bar.dart';
-import 'package:rbx_counter/common/common_button/common_button.dart';
 import 'package:rbx_counter/common/common_dialog/common_dialog.dart';
 import 'package:rbx_counter/constants/app_colors.dart';
-import 'package:rbx_counter/constants/static_decoration.dart';
 import 'package:scratcher/scratcher.dart';
+import '../presentation/widgets/cyber_background.dart';
+import '../presentation/widgets/antigravity_card.dart';
 
 class ScratchCardScreen extends StatefulWidget {
   const ScratchCardScreen({super.key});
@@ -18,26 +16,48 @@ class ScratchCardScreen extends StatefulWidget {
   State<ScratchCardScreen> createState() => _ScratchCardScreenState();
 }
 
-class _ScratchCardScreenState extends State<ScratchCardScreen> {
+class _ScratchCardScreenState extends State<ScratchCardScreen>
+    with SingleTickerProviderStateMixin {
   int currentCard = 1;
   bool isScratched = false;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1000));
+    _fadeAnimation =
+        CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic);
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   void _showResultDialog(BuildContext context) {
     final provider = Provider.of<ScratchProvider>(context, listen: false);
-    provider.onScratchCompleted();
+
+    if (provider.lastSuccess) {
+      Provider.of<WalletProvider>(context, listen: false)
+          .addReward(provider.lastReward);
+    }
 
     CommonDialog.show(
       context,
       success: provider.lastSuccess,
       title: provider.lastSuccess ? "🎉 Congratulations!" : "😢 Try Again",
       message: provider.lastSuccess
-          ? "You won ${provider.lastReward} RBX!\nTotal RBX: ${provider.reward}"
+          ? "You won ${provider.lastReward} RBX!\nTotal RBX: ${Provider.of<WalletProvider>(context, listen: false).totalReward}"
           : "This card was not successful. Try again!",
       buttonText: provider.lastSuccess ? "Add Wallet" : "Retry",
       lottieAsset: provider.lastSuccess ? 'assets/lottie/Trophy.json' : null,
       onButtonPressed: () {
         Navigator.pop(context);
-
         setState(() {
           isScratched = false;
           if (provider.lastSuccess) currentCard++;
@@ -51,92 +71,274 @@ class _ScratchCardScreenState extends State<ScratchCardScreen> {
     return Consumer<ScratchProvider>(
       builder: (context, provider, child) {
         String cardText = provider.lastSuccess
-            ? "🎁 You won +${provider.lastReward} RBX!"
-            : "😢 Sorry, No RBX this time. Try again!";
-        return Scratcher(
-          image: Image.asset(
-              "assets/icons/scratch_overlay.jpeg"), // remove default overlay if using color
-          brushSize: 40,
-          threshold: 50,
-          color: AppColors.background, // Scratch overlay color
-          onThreshold: () {
-            if (!isScratched) {
-              provider.onScratchCompleted();
-              setState(() => isScratched = true);
-              _showResultDialog(context);
-            }
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            height: 220,
-            width: 320,
-            decoration: BoxDecoration(
-              gradient: provider.lastSuccess
-                  ? LinearGradient(
-                      colors: [AppColors.primary, AppColors.secondary],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : LinearGradient(
-                      colors: [
-                        AppColors.subTextColor.withOpacity(0.3),
-                        AppColors.textColor.withOpacity(0.3),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            ? "🎁 YOU WON +${provider.lastReward} RBX!"
+            : "😢 NO LUCK THIS TIME. RETRY!";
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "SCRATCH THE AREA BELOW",
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 30),
+              // Antigravity Container for Scratcher
+              AntigravityCard(
+                onTap: () {},
+                borderGradient: const [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0), // Gap for the glow
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Scratcher(
+                      brushSize: 50,
+                      threshold: 50,
+                      color: const Color(0xFF1A1A1A),
+                      image: Image.asset("assets/images/scratch_card_cover.png",
+                          fit: BoxFit.cover),
+                      onThreshold: () {
+                        if (!isScratched) {
+                          provider.onScratchCompleted();
+                          setState(() => isScratched = true);
+                          _showResultDialog(context);
+                        }
+                      },
+                      child: Container(
+                        height: 220,
+                        width: 320,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D0D0D),
+                          image: provider.lastSuccess
+                              ? const DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/onboarding1.png"), // Using a holographic asset as background
+                                  opacity: 0.1,
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Ambient Glow
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: RadialGradient(
+                                  colors: [
+                                    (provider.lastSuccess
+                                            ? const Color(0xFF48CAE4)
+                                            : Colors.redAccent)
+                                        .withOpacity(0.15),
+                                    Colors.transparent,
+                                  ],
+                                  radius: 0.8,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  provider.lastSuccess
+                                      ? Icons.auto_awesome_rounded
+                                      : Icons
+                                          .sentiment_very_dissatisfied_rounded,
+                                  color: provider.lastSuccess
+                                      ? const Color(0xFF48CAE4)
+                                      : Colors.white30,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 12),
+                                ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: provider.lastSuccess
+                                        ? [
+                                            const Color(0xFF48CAE4),
+                                            const Color(0xFF9D4EDD)
+                                          ]
+                                        : [Colors.white, Colors.white54],
+                                  ).createShader(bounds),
+                                  child: Text(
+                                    cardText.split('.').first.toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                                ),
+                                if (provider.lastSuccess) ...[
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: Colors.white.withOpacity(0.1)),
+                                    ),
+                                    child: const Text(
+                                      "REWARD UNLOCKED",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              cardText,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: provider.lastSuccess
-                    ? AppColors.buttonsColor
-                    : AppColors.textColor,
-                fontSize: 20,
-                shadows: [
-                  Shadow(
-                    blurRadius: 4,
-                    color: AppColors.subTextColor.withOpacity(0.4),
-                    offset: const Offset(2, 2),
                   ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              // Hint Icons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _hintIcon(Icons.auto_awesome_rounded),
+                  const SizedBox(width: 20),
+                  _hintIcon(Icons.touch_app_rounded),
+                  const SizedBox(width: 20),
+                  _hintIcon(Icons.currency_bitcoin_rounded),
                 ],
               ),
-            ),
+            ],
           ),
         );
       },
     );
   }
 
+  Widget _hintIcon(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Icon(icon, color: Colors.white30, size: 24),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NativeAdsScreen(),
-      // backgroundColor: Colors.blue.shade50,
-      appBar: CommonAppBar(title: "Scratch Card", showBackButton: true),
-      body: ChangeNotifierProvider(
-        create: (_) => ScratchProvider(),
-        builder: (context, child) {
-          return Consumer<ScratchProvider>(builder: (context, provider, child) {
-            return Column(
-              children: [
-                height10,
-                CommonOutlineButton(
-                  radius: 0,
-                  title: "RBX Reward: ${provider.reward}",
-                  width: double.infinity,
-                  onTap: null,
-                ),
-                const SizedBox(height: 20),
-                Expanded(child: _buildScratchCard(context)),
-              ],
-            );
-          });
-        },
+      extendBodyBehindAppBar: true,
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+        leading: IconButton(
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
+          ).createShader(bounds),
+          child: const Text(
+            "LUCKY SCRATCH",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 2.5,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+      body: CyberBackground(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: ChangeNotifierProvider(
+            create: (_) => ScratchProvider(),
+            builder: (context, child) {
+              return Consumer<ScratchProvider>(
+                  builder: (context, provider, child) {
+                return SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        // Premium Stats Header
+                        AntigravityCard(
+                          onTap: () {},
+                          borderGradient: const [
+                            Color(0xFFFF5400),
+                            Color(0xFFFF0000)
+                          ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "CURRENT BALANCE",
+                                      style: TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "RBX WALLET",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "${Provider.of<WalletProvider>(context).totalReward}",
+                                  style: const TextStyle(
+                                    color: Color(0xFFFF5400),
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Expanded(child: _buildScratchCard(context)),
+                        const NativeAdsScreen(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                );
+              });
+            },
+          ),
+        ),
       ),
     );
   }

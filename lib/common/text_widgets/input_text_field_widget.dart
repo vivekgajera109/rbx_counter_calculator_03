@@ -20,27 +20,33 @@ Widget searchTextFormField(BuildContext context,
     focusNode: focusNode,
     maxLines: 1,
     hintText: "${hintText ?? "Search"}...",
-    border: const BorderSide(
-      color: Colors.transparent,
-    ),
     onFieldSubmitted: onFieldSubmitted,
     onChanged: onChanged,
     suffixIcon: GestureDetector(
       onTap: searchOnTap,
       child: Container(
-        margin: EdgeInsets.all(6),
-        padding: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(2),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
+          ),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF48CAE4).withOpacity(0.3),
+              blurRadius: 8,
+            ),
+          ],
         ),
         child: const Icon(
-          Icons.search,
-          color: AppColors.white,
+          Icons.search_rounded,
+          color: Colors.white,
+          size: 20,
         ),
       ),
     ),
-    borderRaduis: 5,
+    borderRaduis: 15,
   );
 }
 
@@ -486,7 +492,7 @@ Widget textFormField({
   final int? errorMaxLines,
   final int? maxLines,
   final int? maxLength,
-  final double? borderRaduis = 3,
+  final double? borderRaduis = 15,
   final bool? enabled,
   final bool autofocus = false,
   final bool obscureText = false,
@@ -539,43 +545,54 @@ Widget textFormField({
     autocorrect: true,
     autofocus: autofocus,
     textAlign: textAlign,
-    cursorColor: AppColors.white,
-    cursorHeight: 20,
+    cursorColor: const Color(0xFF48CAE4),
+    cursorWidth: 3,
     style: textStyle ??
-        AppTextStyle.normalRegular15
-            .copyWith(color: AppColors.primary, fontSize: 17),
+        const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
     textAlignVertical: TextAlignVertical.center,
     decoration: InputDecoration(
       counterText: counterText == null ? null : "",
-      counterStyle: AppTextStyle.normalRegular15
-          .copyWith(color: AppColors.primary, fontSize: 10),
-      errorStyle: AppTextStyle.normalRegular15
-          .copyWith(color: errorColor ?? Colors.red, fontSize: 14),
-      prefixIcon: prefixIcon,
-      // isDense: true,
-      contentPadding: contentPadding ?? EdgeInsets.fromLTRB(15, 0, 10, 0),
+      errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
+      prefixIcon: prefixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconTheme(
+                data: const IconThemeData(color: Colors.white70),
+                child: prefixIcon,
+              ),
+            )
+          : null,
+      contentPadding: contentPadding ??
+          const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRaduis ?? 3),
-        borderSide: border ?? BorderSide.none,
+        borderRadius: BorderRadius.circular(borderRaduis ?? 15),
+        borderSide: const BorderSide(color: Colors.redAccent, width: 2),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRaduis ?? 3),
-        borderSide: border ?? BorderSide.none,
+        borderRadius: BorderRadius.circular(borderRaduis ?? 15),
+        borderSide: const BorderSide(color: Color(0xFF48CAE4), width: 2),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRaduis ?? 3),
-        borderSide: border ?? BorderSide.none,
+        borderRadius: BorderRadius.circular(borderRaduis ?? 15),
+        borderSide:
+            BorderSide(color: Colors.white.withOpacity(0.1), width: 1.5),
       ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRaduis ?? 3),
-        borderSide: border ?? BorderSide.none,
+        borderRadius: BorderRadius.circular(borderRaduis ?? 15),
+        borderSide: border ?? BorderSide(color: Colors.white.withOpacity(0.1)),
       ),
-      errorMaxLines: 5,
-      fillColor: filledColor ?? AppColors.white,
+      fillColor: filledColor ?? Colors.white.withOpacity(0.05),
       filled: true,
       hintStyle: hintStyle ??
-          AppTextStyle.normalRegular15.copyWith(
-              color: AppColors.primary.withOpacity(0.6), fontSize: 17),
+          TextStyle(
+            color: Colors.white.withOpacity(0.3),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
       hintText: hintText,
       enabled: enabled ?? true,
       suffixIcon: suffixIcon,

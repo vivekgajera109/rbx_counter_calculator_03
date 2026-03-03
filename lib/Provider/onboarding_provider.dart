@@ -11,21 +11,23 @@ class OnboardingProvider extends ChangeNotifier {
   final pages = [
     OnboardingPage(
       title: "Welcome to RBX Counter",
-      subtitle: "Track your RBX rewards and spin the wheel for exciting prizes!",
-      lottieAsset: "assets/lottie/onboarding1.json",
+      subtitle:
+          "Track your RBX rewards and spin the wheel for exciting prizes!",
+      imageAsset: "assets/images/onboarding1.png",
       bgColor: AppColors.primary,
     ),
     OnboardingPage(
       title: "Scratch & Win",
       subtitle: "Scratch cards to win coins and grow your RBX wallet.",
-      lottieAsset: "assets/lottie/onboarding2.json",
+      imageAsset: "assets/images/onboarding2.png",
       bgColor: AppColors.secondary,
     ),
     OnboardingPage(
       title: "Stay Updated",
-      subtitle: "Get the latest rewards, memes, and offers directly on your app.",
-      lottieAsset: "assets/lottie/onboarding3.json",
-      bgColor: Color(0xFFFFE29A),
+      subtitle:
+          "Get the latest rewards, memes, and offers directly on your app.",
+      imageAsset: "assets/images/onboarding3.png",
+      bgColor: const Color(0xFFFFE29A),
     ),
   ];
 
@@ -50,13 +52,13 @@ class OnboardingProvider extends ChangeNotifier {
 class OnboardingPage {
   final String title;
   final String subtitle;
-  final String lottieAsset;
+  final String imageAsset;
   final Color bgColor;
 
   OnboardingPage({
     required this.title,
     required this.subtitle,
-    required this.lottieAsset,
+    required this.imageAsset,
     required this.bgColor,
   });
 }

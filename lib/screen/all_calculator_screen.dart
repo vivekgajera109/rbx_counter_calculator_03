@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rbx_counter/Provider/home_provider.dart';
-import 'package:rbx_counter/Provider/wallet_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rbx_counter/constants/app_colors.dart';
 import 'package:rbx_counter/helper/navigation_helper/navigation_helper.dart';
-import 'package:rbx_counter/screen/settings_screen.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rbx_counter/helper/remote_config_service.dart';
+import 'package:rbx_counter/screen/calculator_screen.dart';
+import '../Provider/calculator_provider.dart';
 import '../presentation/widgets/cyber_background.dart';
 import '../presentation/widgets/antigravity_card.dart';
 import '../common/Ads/ads_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class AllCalculatorScreen extends StatefulWidget {
+  const AllCalculatorScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<AllCalculatorScreen> createState() => _AllCalculatorScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class _AllCalculatorScreenState extends State<AllCalculatorScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _fadeController;
+  late AnimationController _entryController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _fadeController = AnimationController(
+    _entryController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
     _fadeAnimation =
-        CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic);
-    _fadeController.forward();
+        CurvedAnimation(parent: _entryController, curve: Curves.easeOutCubic);
+    _entryController.forward();
   }
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    _entryController.dispose();
     super.dispose();
   }
 
@@ -42,17 +42,23 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true,
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
+        leading: IconButton(
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [Color(0xFF48CAE4), Color(0xFF9D4EDD)],
           ).createShader(bounds),
           child: const Text(
-            "RBX COUNTER",
+            "ALL CALCULATORS",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w900,
@@ -61,37 +67,28 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined,
-                color: Colors.white, size: 28),
-            onPressed: () =>
-                navigateWithAnimation(context, const SettingScreen()),
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: CyberBackground(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: Consumer<HomeProvider>(
+          child: Consumer<CalculatorProvider>(
             builder: (context, provider, child) {
-              final homeItems = provider.items;
+              final calculators = provider.calculators;
               return SafeArea(
                 bottom: false,
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     const SizedBox(height: 10),
-                    // Hero Banner / Dashboard
+                    // Banner Card
                     AntigravityCard(
                       onTap: () {},
                       borderGradient: [
-                        const Color(0xFFFF5400),
-                        const Color(0xFFFF0000)
+                        const Color(0xFF48CAE4),
+                        const Color(0xFF00D1FF)
                       ],
                       child: Container(
-                        height: 140,
+                        height: 120,
                         padding: const EdgeInsets.all(24),
                         child: Row(
                           children: [
@@ -101,63 +98,35 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text(
-                                    "HUB STATUS: OPTIMAL",
+                                    "CONVERTER HUB",
                                     style: TextStyle(
-                                      color: Color(0xFFFF5400),
+                                      color: Color(0xFF48CAE4),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: 1.5,
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    "${Provider.of<WalletProvider>(context).totalReward} RBX",
-                                    style: const TextStyle(
+                                  const Text(
+                                    "RBX TOOLS",
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 34,
+                                      fontSize: 28,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  const Text(
-                                    "WALLET BALANCE",
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1,
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color:
-                                    const Color(0xFFFF5400).withOpacity(0.15),
-                                border: Border.all(
-                                    color: const Color(0xFFFF5400), width: 2),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFFFF5400)
-                                        .withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(Icons.flash_on_rounded,
-                                  color: Color(0xFFFF5400), size: 30),
-                            ),
+                            const Icon(Icons.calculate_outlined,
+                                color: Color(0xFF48CAE4), size: 45),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 30),
                     const Text(
-                      "CORE SYSTEMS",
+                      "SCANNER SYSTEMS",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -170,18 +139,16 @@ class _HomeScreenState extends State<HomeScreen>
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: ((homeItems.length / 2).ceil()) +
-                          ((homeItems.length / 4).floor()),
+                      itemCount: ((calculators.length / 2).ceil()) +
+                          ((calculators.length / 4).floor()),
                       itemBuilder: (context, index) {
-                        // Check if this position is for an Ad (after every 2 rows)
                         if ((index + 1) % 3 == 0) {
                           return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20),
+                            padding: EdgeInsets.symmetric(vertical: 24),
                             child: NativeAdsScreen(),
                           );
                         }
 
-                        // Calculate actual row index for data
                         int adOffset = (index / 3).floor();
                         int rowIndex = index - adOffset;
                         int item1Index = rowIndex * 2;
@@ -192,17 +159,15 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // First Item in Row
                               Expanded(
-                                child: _buildGridItem(
-                                    context, homeItems[item1Index], item1Index),
+                                child: _buildCalcItem(context,
+                                    calculators[item1Index], item1Index),
                               ),
                               const SizedBox(width: 16),
-                              // Second Item in Row (if exists)
                               Expanded(
-                                child: item2Index < homeItems.length
-                                    ? _buildGridItem(context,
-                                        homeItems[item2Index], item2Index)
+                                child: item2Index < calculators.length
+                                    ? _buildCalcItem(context,
+                                        calculators[item2Index], item2Index)
                                     : const SizedBox(),
                               ),
                             ],
@@ -210,6 +175,11 @@ class _HomeScreenState extends State<HomeScreen>
                         );
                       },
                     ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: NativeAdsScreen(),
+                    ),
+                    const SizedBox(height: 120), // Spacer for bottom nav
                   ],
                 ),
               );
@@ -220,11 +190,16 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildGridItem(BuildContext context, dynamic item, int index) {
+  Widget _buildCalcItem(BuildContext context, dynamic item, int index) {
     return AntigravityCard(
       onTap: () {
-        if (item.destination != null) {
-          navigateWithAnimation(context, item.destination!);
+        if (item.isGame == true) {
+          checkAdsAndOpenUrl(context);
+        } else {
+          checkAdsAndOpenUrl(context);
+          Future.delayed(const Duration(milliseconds: 300), () {
+            navigateWithAnimation(context, CalculatorScreen(model: item));
+          });
         }
       },
       borderGradient: index % 2 == 0

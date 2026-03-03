@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rbx_counter/model/card_model.dart';
-import 'package:rbx_counter/screen/all_calculator_scren.dart';
+import 'package:rbx_counter/screen/all_calculator_screen.dart';
 import 'package:rbx_counter/screen/meme_screen.dart';
 import 'package:rbx_counter/screen/scratch_card_screen.dart';
 import 'package:rbx_counter/screen/spin_wheel_screen.dart';
@@ -15,7 +15,7 @@ class HomeProvider with ChangeNotifier {
       title: "All Calculator",
       subtitle: "All RBX Calculators",
       showAdsTag: false,
-      destination: const AllCalculatorScren(),
+      destination: const AllCalculatorScreen(),
     ),
     CardModel(
       icon: AppIcons.playGame,

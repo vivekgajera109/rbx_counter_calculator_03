@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color white = Color(0xFFFFFFFF); // White
-  static const Color black = Color(0xFF000000); // Black
-  static const Color primary = Color(0xFF1E3A8A); // Navy Blue
-  static const Color secondary = Color(0xFF3B82F6); // Sky Blue
-  static const Color background = Color(0xFFE5E7EB); // Light Gray
-  // static const Color background = Color(0xFFE5E7EB); // Light Gray
-  static const Color buttonsColor = Color(0xFF10B981); // Emerald Green
-  static const Color textColor = Color(0xFF111827); // Charcoal
-  static const Color subTextColor = Color(0xFF6B7280); // Cool Gray
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
+
+  // Cyberpunk Palette
+  static const Color background = Color(0xFF0D0208); // Deep black-green
+  static const Color cardColor = Color(0xFF161B22); // Dark surface
+  static const Color primary = Color(0xFF00FF41); // Matrix/Cyber green
+  static const Color secondary = Color(0xFF00D1FF); // Neon blue
+  static const Color accent = Color(0xFFFF003C); // Cyber red/pink
+
+  static const Color buttonsColor = Color(0xFF00FF41);
+  static const Color textColor = Color(0xFFF0F6FC);
+  static const Color subTextColor = Color(0xFF8B949E);
+
+  // Gradients
+  static const List<Color> cyberGradient = [
+    Color(0xFF00D1FF),
+    Color(0xFF9D4EDD)
+  ];
+  static const List<Color> fireGradient = [
+    Color(0xFFFF5400),
+    Color(0xFFFF0000)
+  ];
 }
 
 class AppTheme {

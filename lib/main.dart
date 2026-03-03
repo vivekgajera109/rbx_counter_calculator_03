@@ -12,6 +12,7 @@ import 'package:rbx_counter/helper/remote_config_service.dart';
 import 'package:rbx_counter/screen/splash_screen.dart';
 import 'Provider/onboarding_provider.dart';
 import 'Provider/spin_wheel_provider.dart';
+import 'Provider/wallet_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CalculatorProvider()),
         ChangeNotifierProvider(create: (_) => AdsProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (_) => WalletProvider()),
       ],
       child: const MyApp(),
     ),
