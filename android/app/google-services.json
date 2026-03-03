@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "951330244269",
+    "project_id": "rbx-counter-3731f",
+    "storage_bucket": "rbx-counter-3731f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951330244269:android:ba7c0a270fb035ad196824",
+        "android_client_info": {
+          "package_name": "com.havique.rbx.counter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOf44iYmqz1mT9sP1SCw1Zv4K3cV6-3qk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
