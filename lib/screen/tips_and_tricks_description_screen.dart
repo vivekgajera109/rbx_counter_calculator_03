@@ -1,3 +1,4 @@
+import 'package:rbx_counter/helper/remote_config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rbx_counter/constants/app_colors.dart';
 import '../presentation/widgets/cyber_background.dart';
@@ -49,7 +50,10 @@ class _TipsAndTricksDescriptionScreenState
         leading: IconButton(
           icon:
               const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            await checkAdsAndOpenUrl(context);
+            if (context.mounted) Navigator.pop(context);
+          },
         ),
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(

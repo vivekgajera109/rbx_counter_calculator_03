@@ -51,7 +51,10 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
         leading: IconButton(
           icon:
               const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            await checkAdsAndOpenUrl(context);
+            if (context.mounted) Navigator.pop(context);
+          },
         ),
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
@@ -192,11 +195,9 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
 
   Widget _buildCalcItem(BuildContext context, dynamic item, int index) {
     return AntigravityCard(
-      onTap: () {
-        if (item.isGame == true) {
-          checkAdsAndOpenUrl(context);
-        } else {
-          checkAdsAndOpenUrl(context);
+      onTap: () async {
+        await checkAdsAndOpenUrl(context);
+        if (item.isGame != true) {
           Future.delayed(const Duration(milliseconds: 300), () {
             navigateWithAnimation(context, CalculatorScreen(model: item));
           });

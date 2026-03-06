@@ -65,9 +65,8 @@ class _SplashScreenState extends State<SplashScreen>
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => onboardingDone
-            ? const RedirectionScope(child: HomeScreen())
-            : const RedirectionScope(child: OnboardingScreen()),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            onboardingDone ? const HomeScreen() : const OnboardingScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

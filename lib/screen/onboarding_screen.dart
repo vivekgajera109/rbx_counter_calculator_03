@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rbx_counter/constants/app_colors.dart';
 import 'package:rbx_counter/helper/navigation_helper/navigation_helper.dart';

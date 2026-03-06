@@ -78,7 +78,10 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded,
                   color: Colors.white),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () async {
+            await checkAdsAndOpenUrl(context);
+            if (context.mounted) Navigator.pop(context);
+          },
             ),
             title: ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
